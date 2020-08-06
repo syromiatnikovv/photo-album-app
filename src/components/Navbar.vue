@@ -7,9 +7,14 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn text>
-      <v-icon left>mdi-cloud-upload</v-icon>
-      Загрузить
-    </v-btn>
+    <upload-btn></upload-btn>
   </v-app-bar>
 </template>
+
+<script>
+import UploadBtn from './UploadBtn'
+
+export default {
+  components: { UploadBtn },
+}
+</script>
