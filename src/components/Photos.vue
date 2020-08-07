@@ -2,11 +2,15 @@
   <v-container fluid :class="loading || !images.length ? 'fill-height' : ''">
     <template v-if="!loading && !isNoPhotos">
       <v-card class="mt-1">
-        <v-container fluid>
-          <v-row>
+        <draggable
+          v-model="images"
+          v-bind="dragOptions"
+          class="container container--fluid"
+        >
+          <transition-group type="transition" name="flip-list" class="row">
             <v-col
               v-for="({ id, imageSrc }, i) in images"
-              :key="i"
+              :key="id"
               class="d-flex child-flex"
               cols="6"
               sm="4"
@@ -44,8 +48,8 @@
                 </v-btn>
               </v-card>
             </v-col>
-          </v-row>
-        </v-container>
+          </transition-group>
+        </draggable>
       </v-card>
 
       <photo-viewer :images="images" ref="viewer"></photo-viewer>
@@ -71,15 +75,22 @@
 <script>
 import PhotoViewer from './PhotoViewer'
 import PhotoRemove from './PhotoRemove'
+import Draggable from 'vuedraggable'
 
 export default {
   components: {
     PhotoViewer,
     PhotoRemove,
+    Draggable,
   },
 
   data: () => ({
     loading: false,
+    dragOptions: {
+      animation: 200,
+      group: 'description',
+      disabled: false,
+    },
   }),
 
   mounted() {
@@ -87,8 +98,14 @@ export default {
   },
 
   computed: {
-    images() {
-      return this.$store.getters['images']
+    images: {
+      get() {
+        return this.$store.getters['images']
+      },
+
+      set(value) {
+        this.$store.commit('setImages', value)
+      },
     },
 
     isNoPhotos() {

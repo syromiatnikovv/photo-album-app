@@ -86,7 +86,6 @@ export default new Vuex.Store({
     async removeImage({ getters, commit }, index) {
       const id = getters.images[index].id
       const name = getters.images[index].name
-      console.log(id)
 
       try {
         //delete file from storage
