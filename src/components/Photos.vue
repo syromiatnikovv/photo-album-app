@@ -5,7 +5,7 @@
         <v-container fluid>
           <v-row>
             <v-col
-              v-for="({ imageSrc }, i) in images"
+              v-for="({ id, imageSrc }, i) in images"
               :key="i"
               class="d-flex child-flex"
               cols="6"
@@ -18,7 +18,7 @@
                   :src="imageSrc"
                   aspect-ratio="1"
                   class="grey lighten-2 photo-img"
-                  @click="viewImg(i)"
+                  @click="viewImage(i)"
                 >
                   <template v-slot:placeholder>
                     <v-row
@@ -33,6 +33,15 @@
                     </v-row>
                   </template>
                 </v-img>
+
+                <v-btn
+                  icon
+                  dark
+                  class="remove-btn"
+                  @click.stop="openRemoveDialog(i)"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
               </v-card>
             </v-col>
           </v-row>
@@ -40,6 +49,8 @@
       </v-card>
 
       <photo-viewer :images="images" ref="viewer"></photo-viewer>
+
+      <photo-remove ref="photoRemove"></photo-remove>
     </template>
 
     <v-row
@@ -59,10 +70,12 @@
 
 <script>
 import PhotoViewer from './PhotoViewer'
+import PhotoRemove from './PhotoRemove'
 
 export default {
   components: {
     PhotoViewer,
+    PhotoRemove,
   },
 
   data: () => ({
@@ -91,13 +104,17 @@ export default {
         await this.$store.dispatch('getImages')
 
         this.loading = false
-      } catch (error) {
+      } catch (e) {
         this.loading = false
       }
     },
 
-    viewImg(index) {
+    viewImage(index) {
       this.$refs.viewer.view(index)
+    },
+
+    openRemoveDialog(index) {
+      this.$refs.photoRemove.open(index)
     },
   },
 }
@@ -112,5 +129,18 @@ export default {
 .photo-img:hover {
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.photo-img:hover + .remove-btn,
+.remove-btn:hover {
+  display: inline-flex;
+}
+
+.remove-btn {
+  display: none;
+  position: absolute;
+  color: #fff;
+  right: 3px;
+  top: 3px;
 }
 </style>

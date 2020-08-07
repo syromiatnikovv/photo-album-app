@@ -34,8 +34,6 @@ export default {
         await this.$store.dispatch('uploadFile', this.image)
 
         this.loading = false
-
-        await this.$store.dispatch('getImages')
       } catch (e) {
         this.loading = false
       }

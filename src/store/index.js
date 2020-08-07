@@ -19,16 +19,20 @@ export default new Vuex.Store({
     setImages(state, images) {
       state.images = images
     },
+
+    removeImage(state, index) {
+      state.images.splice(index, 1)
+    },
   },
 
   actions: {
-    async uploadFile(context, image) {
+    async uploadFile({ dispatch }, image) {
       try {
         // add empty record in database
         const { key } = await firebase
           .database()
           .ref('photos')
-          .push({ imageSrc: '' })
+          .push({ name: '', imageSrc: '' })
 
         // add file in storage
         const imageExt = image.name.slice(image.name.lastIndexOf('.'))
@@ -48,27 +52,56 @@ export default new Vuex.Store({
         await firebase
           .database()
           .ref(`photos/${key}`)
-          .set({ imageSrc })
+          .set({ name: `${key}.${imageExt}`, imageSrc })
+
+        await dispatch('getImages')
       } catch (e) {
         throw new Error(e)
       }
     },
 
-    async getImages() {
+    async getImages({ commit }) {
       try {
         const images = []
 
-        const res = await firebase
+        await firebase
           .database()
           .ref('photos')
-          .once('value')
+          .once('value', (res) => {
+            res.forEach((item) => {
+              images.push({
+                id: item.key,
+                name: item.val().name,
+                imageSrc: item.val().imageSrc,
+              })
+            })
+          })
 
-        const resImages = res.val()
-        Object.keys(resImages).forEach((key) => {
-          images.push(resImages[key])
-        })
+        commit('setImages', images)
+      } catch (e) {
+        throw new Error(e)
+      }
+    },
 
-        this.commit('setImages', images)
+    async removeImage({ getters, commit }, index) {
+      const id = getters.images[index].id
+      const name = getters.images[index].name
+      console.log(id)
+
+      try {
+        //delete file from storage
+        await firebase
+          .storage()
+          .ref(`photos/${name}`)
+          .delete()
+
+        //delete record from database
+        await firebase
+          .database()
+          .ref(`photos/${id}`)
+          .remove()
+
+        commit('removeImage', index)
       } catch (e) {
         throw new Error(e)
       }
