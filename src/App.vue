@@ -16,3 +16,9 @@ export default {
   components: { Navbar, Photos },
 }
 </script>
+
+<style>
+body {
+  padding: 0 !important;
+}
+</style>

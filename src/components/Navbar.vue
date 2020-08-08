@@ -2,7 +2,7 @@
   <v-app-bar color="primary" dark app>
     <v-toolbar-title>
       <v-icon left>mdi-camera</v-icon>
-      Photo Album App
+      Фото альбом
     </v-toolbar-title>
 
     <v-spacer></v-spacer>

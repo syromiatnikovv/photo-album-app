@@ -35,14 +35,13 @@ export default new Vuex.Store({
           .push({ name: '', imageSrc: '' })
 
         // add file in storage
-        const imageExt = image.name.slice(image.name.lastIndexOf('.'))
+        const imageExt = image.name.slice(image.name.lastIndexOf('.') + 1)
         const fileData = await firebase
           .storage()
           .ref(`photos/${key}.${imageExt}`)
           .put(image)
 
         // update record in database
-        //const imageSrc = fileData.metadata.downloadURLs[0]
         const imageSrc = await firebase
           .storage()
           .ref()
@@ -52,7 +51,7 @@ export default new Vuex.Store({
         await firebase
           .database()
           .ref(`photos/${key}`)
-          .set({ name: `${key}.${imageExt}`, imageSrc })
+          .update({ name: `${key}.${imageExt}`, imageSrc })
 
         await dispatch('getImages')
       } catch (e) {

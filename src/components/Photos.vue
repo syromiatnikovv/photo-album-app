@@ -1,6 +1,14 @@
 <template>
   <v-container fluid :class="loading || !images.length ? 'fill-height' : ''">
-    <template v-if="!loading && !isNoPhotos">
+    <v-row v-if="loading" align="center" justify="center" no-gutters>
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </v-row>
+
+    <v-row v-else-if="isNoPhotos" align="center" justify="center" no-gutters>
+      Вы пока не добавили ни одной фотографии.
+    </v-row>
+
+    <template v-else>
       <v-card class="mt-1">
         <draggable
           v-model="images"
@@ -17,7 +25,7 @@
               md="3"
               lg="2"
             >
-              <v-card flat tile class="d-flex">
+              <v-card flat tile class="d-flex photo-card">
                 <v-img
                   :src="imageSrc"
                   aspect-ratio="1"
@@ -56,19 +64,6 @@
 
       <photo-remove ref="photoRemove"></photo-remove>
     </template>
-
-    <v-row
-      v-else-if="!loading && isNoPhotos"
-      align="center"
-      justify="center"
-      no-gutters
-    >
-      Вы пока не добавили ни одной фотографии.
-    </v-row>
-
-    <v-row v-else align="center" justify="center" no-gutters>
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-    </v-row>
   </v-container>
 </template>
 
@@ -138,18 +133,17 @@ export default {
 </script>
 
 <style>
-.photo-img {
+.photo-card .photo-img {
   cursor: pointer;
   transition: box-shadow 0.2s;
 }
 
-.photo-img:hover {
+.photo-card:hover .photo-img {
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
-.photo-img:hover + .remove-btn,
-.remove-btn:hover {
+.photo-card:hover .remove-btn {
   display: inline-flex;
 }
 
