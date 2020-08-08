@@ -1,24 +1,23 @@
-# photo-album-app
+# Фото альбом
 
-## Project setup
+<p align="center">
+<img src="https://i.ibb.co/XYXvfRT/QIP-Shot-Screen-040.png"/>
+</p>
+
+## [Демо](https://photo-5a937.web.app/)
+
+## Установка
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Использование
 
-### Compiles and minifies for production
 ```
+# Development
+npm run serve
+
+# Production
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
